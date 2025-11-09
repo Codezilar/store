@@ -55,7 +55,7 @@
 :root {
   --color: #000;
   --bg-color: #fff;
-  --nav: rgb(175, 174, 174);
+  --nav: rgb(66, 65, 65);
 }
 
 /* .dark {
@@ -111,8 +111,9 @@ nav{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
-  background: var(--nav);
+  padding: 1rem 5rem;
+  height: 5rem;
+  /* background: var(--nav); */
 }
 
 .float1{

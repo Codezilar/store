@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { FaChevronDown } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
 
 
 const transition = {
@@ -23,8 +25,18 @@ export const MenuItem = ({
     <div onMouseEnter={() => setActive(item)} className="relative  ">
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer hover:opacity-[0.9]">
-        {item}
+        className="cursor-pointer hover:opacity-[0.9] flex items-center gap-2">
+        <h1>
+          {item === "My Cart" ? <AiOutlineShoppingCart /> : null}
+          {item === "Account" ? <FaRegUser /> : null}
+        </h1>
+        <h1>
+          {item} 
+        </h1>
+        <h1>
+          {item === "My Cart" ? <FaChevronDown /> : null} 
+          {item === "Account" ? <FaChevronDown /> : null} 
+        </h1>
       </motion.p>
       {active !== null && (
         <motion.div
@@ -62,7 +74,7 @@ export const Menu = ({
     <nav
       // resets the state
       onMouseLeave={() => setActive(null)}
-      className="nav">
+      className="nav bg-pink-50">
       {children}
     </nav>
   );
@@ -101,7 +113,7 @@ export const HoveredLink = ({
   return (
     <a
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black ">
+      className="text-neutral-700  hover:text-black ">
       {children}
     </a>
   );
