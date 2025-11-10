@@ -5,12 +5,15 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import Link from "next/link";
+import { useCart } from "@/contexts/CartContext";
 
 export function Nav() {
   const [active, setActive] = useState(null);
+  const { getCartItemsCount } = useCart();
+
   return (
-    <div
-      className={cn("fixed top-0 inset-x-0 w-full mx-auto z-50")}>
+    <div className={cn("fixed top-0 inset-x-0 w-full mx-auto z-50")}>
       <Menu setActive={setActive}>
         <Image src={'/logo.png'} height={80} width={80} alt="logo" />
         <div className="relative border border-transparent shadow-input flex justify-center gap-[2rem] items-center h-[4rem]">
@@ -83,12 +86,21 @@ export function Nav() {
           </MenuItem>
         </div>
         <div className="flex items-center gap-10">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <AiOutlineShoppingCart /> 
-            <h1>
-              Cart
-            </h1>
-          </div>
+          {/* Enhanced Cart Section */}
+          <Link 
+            href="/cart" 
+            className="flex items-center gap-2 cursor-pointer relative group p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <div className="relative">
+              <AiOutlineShoppingCart className="text-xl group-hover:scale-110 transition-transform" /> 
+              {getCartItemsCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center font-semibold shadow-lg animate-pulse">
+                  {getCartItemsCount() > 99 ? '99+' : getCartItemsCount()}
+                </span>
+              )}
+            </div>
+            <h1 className="font-medium">Cart</h1>
+          </Link>
           <MenuItem setActive={setActive} active={active} item="Account">
             <div className="flex flex-col space-y-4 text-sm">
               <HoveredLink href="/web-dev">My Account</HoveredLink>
