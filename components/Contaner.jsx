@@ -6,7 +6,6 @@ import { BackgroundGradient } from "./ui/background-gradient";
 export function Container() {
   return (
     <div className="contain_wrap">
-      <h1>Body Suite Category</h1>
       <div className='containter_main'>            
         <div>
           <BackgroundGradient className="flex flex-col items-center rounded-[22px] w-full max-w-[20rem] p-4 sm:p-10 bg-pink-50 dark:bg-zinc-900">

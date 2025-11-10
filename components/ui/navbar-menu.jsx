@@ -23,7 +23,7 @@ export const MenuItem = ({
 }) => {
   return (
     <div onMouseEnter={() => setActive(item)} className="relative  ">
-      <motion.p
+      <div
         transition={{ duration: 0.3 }}
         className="cursor-pointer hover:opacity-[0.9] flex items-center gap-2">
         <h1>
@@ -37,7 +37,7 @@ export const MenuItem = ({
           {item === "My Cart" ? <FaChevronDown /> : null} 
           {item === "Account" ? <FaChevronDown /> : null} 
         </h1>
-      </motion.p>
+      </div>
       {active !== null && (
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: 10 }}
