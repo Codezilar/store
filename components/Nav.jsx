@@ -4,6 +4,7 @@ import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { motion } from "motion/react";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 export function Nav() {
   const [active, setActive] = useState(null);
@@ -82,14 +83,12 @@ export function Nav() {
           </MenuItem>
         </div>
         <div className="flex items-center gap-10">
-          <MenuItem setActive={setActive} active={active} item="My Cart">
-            <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/web-dev">Web Development</HoveredLink>
-              <HoveredLink href="/interface-design">Interface Design</HoveredLink>
-              <HoveredLink href="/seo">Search Engine Optimization</HoveredLink>
-              <HoveredLink href="/branding">Branding</HoveredLink>
-            </div>
-          </MenuItem>
+          <div className="flex items-center gap-2 cursor-pointer">
+            <AiOutlineShoppingCart /> 
+            <h1>
+              Cart
+            </h1>
+          </div>
           <MenuItem setActive={setActive} active={active} item="Account">
             <div className="flex flex-col space-y-4 text-sm">
               <HoveredLink href="/web-dev">My Account</HoveredLink>

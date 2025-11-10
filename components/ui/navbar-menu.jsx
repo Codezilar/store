@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaChevronDown } from "react-icons/fa";
 import { FaRegUser } from "react-icons/fa";
 
@@ -27,14 +26,12 @@ export const MenuItem = ({
         transition={{ duration: 0.3 }}
         className="cursor-pointer hover:opacity-[0.9] flex items-center gap-2">
         <h1>
-          {item === "My Cart" ? <AiOutlineShoppingCart /> : null}
           {item === "Account" ? <FaRegUser /> : null}
         </h1>
         <h1>
           {item} 
         </h1>
         <h1>
-          {item === "My Cart" ? <FaChevronDown /> : null} 
           {item === "Account" ? <FaChevronDown /> : null} 
         </h1>
       </div>

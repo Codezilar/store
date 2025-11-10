@@ -10,8 +10,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      <Nav />
+    <>
       <Hero />
       <AppleCardsCarouselDemo />
       <Container />
@@ -20,7 +19,7 @@ const page = () => {
       <Grid />
       <World />
       <Review />
-    </div>
+    </>
   )
 }
 
