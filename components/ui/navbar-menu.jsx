@@ -21,7 +21,11 @@ export const MenuItem = ({
   children
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative  ">
+    <div 
+      onMouseEnter={() => setActive(item)}
+        className={`relative ${
+        (item === "Categories" || item === "Best Seller" || item === "Help") ? "nav_items" : ""
+      }`}>
       <div
         transition={{ duration: 0.3 }}
         className="cursor-pointer hover:opacity-[0.9] flex items-center gap-2">
