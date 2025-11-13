@@ -7,15 +7,21 @@ import { motion, AnimatePresence } from "motion/react";
 import { AiOutlineShoppingCart, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
+import { useSession, signOut } from "next-auth/react";
 
 export function Nav() {
   const [active, setActive] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileActive, setMobileActive] = useState(null);
   const { getCartItemsCount } = useCart();
+  const { data: session, status } = useSession();
 
   const toggleMobileSubmenu = (item) => {
     setMobileActive(mobileActive === item ? null : item);
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/' });
   };
 
   return (
@@ -101,17 +107,55 @@ export function Nav() {
               </div>
               <h1 className="font-medium">Cart</h1>
             </Link>
-            <MenuItem setActive={setActive} active={active} item="Account">
-              <div className="flex flex-col space-y-4 text-sm">
-                <HoveredLink href="/account">My Account</HoveredLink>
-                <HoveredLink href="/orders">My Orders</HoveredLink>
-                <HoveredLink href="/settings">Settings</HoveredLink>
-                <HoveredLink href="/favourites">Favourites</HoveredLink>
-                <HoveredLink href="/addresses">Delivery Addresses</HoveredLink>
-                <HoveredLink href="/billing">Billing Data</HoveredLink>
-                <HoveredLink href="/logout">Sign Out</HoveredLink>
+            
+            {/* Conditional Account Menu based on authentication */}
+            {session ? (
+              // User is logged in - show account menu with sign out
+              <MenuItem setActive={setActive} active={active} item="Account">
+                <div className="flex flex-col space-y-4 text-sm">
+                  <div className="px-3 py-2 border-b border-gray-100">
+                    <p className="font-medium text-gray-900">Welcome,</p>
+                    <p className="font-medium text-gray-900">{session.user.name}</p>
+                    <p className="text-xs text-gray-500">{session.user.email}</p>
+                    {session.user.role === 'admin' && (
+                      <Link href={'/dashboard'}>
+                        <span className="inline-block mt-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                          Admin
+                        </span>
+                      </Link>
+                    )}
+                  </div>
+                  <HoveredLink href="/account">My Account</HoveredLink>
+                  <HoveredLink href="/orders">My Orders</HoveredLink>
+                  <HoveredLink href="/settings">Settings</HoveredLink>
+                  <HoveredLink href="/favourites">Favourites</HoveredLink>
+                  <HoveredLink href="/addresses">Delivery Addresses</HoveredLink>
+                  <HoveredLink href="/billing">Billing Data</HoveredLink>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-left text-red-600 hover:text-red-700 transition-colors px-3 py-2 hover:bg-red-50 rounded-md"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </MenuItem>
+            ) : (
+              // User is not logged in - show sign in/sign up options
+              <div className="flex items-center gap-3">
+                <Link 
+                  href="/auth/signin" 
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/auth/signup" 
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
+                >
+                  Sign Up
+                </Link>
               </div>
-            </MenuItem>
+            )}
           </div>
         </Menu>
       </div>
@@ -177,6 +221,19 @@ export function Nav() {
                       <AiOutlineClose className="text-lg" />
                     </button>
                   </div>
+                  
+                  {/* User info if logged in */}
+                  {session && (
+                    <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                      <p className="font-medium text-gray-900">Welcome, {session.user.name}</p>
+                      <p className="text-sm text-gray-500 truncate">{session.user.email}</p>
+                      {session.user.role === 'admin' && (
+                        <span className="inline-block mt-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                          Admin
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-6 space-y-4">
@@ -345,54 +402,80 @@ export function Nav() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Account */}
-                  <div className="space-y-2 pt-4 border-t border-gray-200">
-                    <button
-                      onClick={() => toggleMobileSubmenu("Account")}
-                      className="w-full flex items-center justify-between py-3 px-4 hover:bg-gray-100 rounded-lg font-medium transition-colors"
-                    >
-                      <span>Account</span>
-                      <motion.span
-                        animate={{ rotate: mobileActive === "Account" ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
+                  {/* Authentication Section */}
+                  {session ? (
+                    // User is logged in - show account menu with sign out
+                    <div className="space-y-2 pt-4 border-t border-gray-200">
+                      <button
+                        onClick={() => toggleMobileSubmenu("Account")}
+                        className="w-full flex items-center justify-between py-3 px-4 hover:bg-gray-100 rounded-lg font-medium transition-colors"
                       >
-                        ▼
-                      </motion.span>
-                    </button>
-                    
-                    <AnimatePresence>
-                      {mobileActive === "Account" && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="pl-4 space-y-2"
+                        <span>Account</span>
+                        <motion.span
+                          animate={{ rotate: mobileActive === "Account" ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          <Link href="/account" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            My Account
-                          </Link>
-                          <Link href="/orders" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            My Orders
-                          </Link>
-                          <Link href="/settings" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            Settings
-                          </Link>
-                          <Link href="/favourites" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            Favourites
-                          </Link>
-                          <Link href="/addresses" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            Delivery Addresses
-                          </Link>
-                          <Link href="/billing" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            Billing Data
-                          </Link>
-                          <Link href="/logout" className="block py-2 px-4 hover:bg-gray-100 rounded-lg text-red-600 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                            Sign Out
-                          </Link>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                          ▼
+                        </motion.span>
+                      </button>
+                      
+                      <AnimatePresence>
+                        {mobileActive === "Account" && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="pl-4 space-y-2"
+                          >
+                            <Link href="/account" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              My Account
+                            </Link>
+                            <Link href="/orders" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              My Orders
+                            </Link>
+                            <Link href="/settings" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              Settings
+                            </Link>
+                            <Link href="/favourites" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              Favourites
+                            </Link>
+                            <Link href="/addresses" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              Delivery Addresses
+                            </Link>
+                            <Link href="/billing" className="block py-2 px-4 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                              Billing Data
+                            </Link>
+                            <button
+                              onClick={() => {
+                                handleSignOut();
+                                setMobileMenuOpen(false);
+                              }}
+                              className="block w-full text-left py-2 px-4 hover:bg-red-50 rounded-lg text-red-600 transition-colors"
+                            >
+                              Sign Out
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <div className="pt-4 border-t border-gray-200 space-y-3">
+                      <Link 
+                        href="/signin" 
+                        className="block w-full text-center py-3 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign In
+                      </Link>
+                      <Link 
+                        href="/signup" 
+                        className="block w-full text-center py-3 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign Up
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </>

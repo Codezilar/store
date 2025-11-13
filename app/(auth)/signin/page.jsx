@@ -1,13 +1,13 @@
+'use client';
+import { SignIn } from '@/components/SignIn';
+import AuthPageWrapper from '@/components/AuthPageWrapper';
 
-import { SignIn } from '@/components/SignIn'
-import React from 'react'
-
-const page = () => {
+export default function SignInPage() {
   return (
-    <div className='signup'>
-      <SignIn />
-    </div>
-  )
+    <AuthPageWrapper>
+      <div className='signin'>
+        <SignIn />
+      </div>
+    </AuthPageWrapper>
+  );
 }
-
-export default page
