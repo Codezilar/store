@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const Page = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,15 +23,23 @@ const Page = () => {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
+      // Check file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Image size should be less than 10MB');
+        return;
+      }
       setImage(file);
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
+      if (error) setError('');
     }
   };
 
@@ -40,28 +51,40 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Create FormData for file upload
-    const submitData = new FormData();
-    
-    // Append form data
-    Object.keys(formData).forEach(key => {
-      submitData.append(key, formData[key]);
-    });
-    
-    // Append image
-    if (image) {
-      submitData.append('image', image);
-    }
+    setError('');
 
-    // TODO: Implement API call to create/update category
-    console.log('Category data:', formData);
-    console.log('Image:', image);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Create FormData for file upload
+      const submitData = new FormData();
+      
+      // Append form data
+      Object.keys(formData).forEach(key => {
+        if (formData[key]) {
+          submitData.append(key, formData[key]);
+        }
+      });
+      
+      // Append image if exists
+      if (image) {
+        submitData.append('image', image);
+      }
+
+      // Make API call
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        body: submitData,
+        // Don't set Content-Type header for FormData - browser will set it automatically with boundary
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create category');
+      }
+
+      // Success - show message and redirect or reset form
       alert('Category created successfully!');
+      
       // Reset form
       setFormData({
         name: '',
@@ -71,7 +94,16 @@ const Page = () => {
       });
       setImage(null);
       setImagePreview('');
-    }, 2000);
+      
+      // Optionally redirect to categories list
+      // router.push('/dashboard/categories');
+
+    } catch (err) {
+      console.error('Category creation error:', err);
+      setError(err.message || 'An error occurred while creating the category');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -85,6 +117,12 @@ const Page = () => {
               <p className="form-subtitle">Add a new category for products</p>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="post-form">
               {/* Basic Information Card */}
               <div className="form-card">
@@ -104,6 +142,7 @@ const Page = () => {
                     required
                     className="form-input"
                     placeholder="Enter category name..."
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -120,6 +159,7 @@ const Page = () => {
                     rows={4}
                     className="form-textarea"
                     placeholder="Brief description of the category..."
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -136,6 +176,7 @@ const Page = () => {
                       accept="image/*"
                       onChange={handleImageChange}
                       className="file-input"
+                      disabled={isSubmitting}
                     />
                     <label htmlFor="image-upload" className="file-upload-label">
                       <div className="upload-icon">📁</div>
@@ -162,6 +203,7 @@ const Page = () => {
                             type="button"
                             onClick={removeImage}
                             className="remove-image-btn"
+                            disabled={isSubmitting}
                           >
                             ×
                           </button>
@@ -188,6 +230,7 @@ const Page = () => {
                     onChange={handleChange}
                     className="form-input"
                     placeholder="SEO title (optional)"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -203,6 +246,7 @@ const Page = () => {
                     rows={3}
                     className="form-textarea"
                     placeholder="SEO description (optional)"
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -213,6 +257,7 @@ const Page = () => {
                   type="button"
                   className="btn-secondary"
                   onClick={() => window.history.back()}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
