@@ -46,19 +46,19 @@ export function Grid() {
     <div className="relative z-20 py-10 lg:py-40 max-w-7xl mx-auto">
       <div className="px-8">
         <h4
-          className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
+          className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium">
           Packed with thousands of features
         </h4>
 
         <p
-          className="text-sm lg:text-base  max-w-2xl  my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
+          className="text-sm lg:text-base  max-w-2xl  my-4 mx-auto text-center font-normal">
           From Image generation to video generation, Everything AI has APIs for
           literally everything. It can even create this website copy for you.
         </p>
       </div>
       <div className="relative ">
         <div
-          className="grid grid-cols-1 lg:grid-cols-6 mt-12 xl:border rounded-md dark:border-neutral-800">
+          className="grid grid-cols-1 lg:grid-cols-6 mt-12 xl:border rounded-md">
           {features.map((feature) => (
             <FeatureCard key={feature.title} className={feature.className}>
               <FeatureTitle>{feature.title}</FeatureTitle>
@@ -88,7 +88,7 @@ const FeatureTitle = ({
 }) => {
   return (
     <p
-      className=" max-w-5xl mx-auto text-left tracking-tight text-black dark:text-white text-xl md:text-2xl md:leading-snug">
+      className=" max-w-5xl mx-auto text-left tracking-tight text-xl md:text-2xl md:leading-snug">
       {children}
     </p>
   );
@@ -101,7 +101,7 @@ const FeatureDescription = ({
     <p
       className={cn(
         "text-sm md:text-base  max-w-4xl text-left mx-auto",
-        "text-neutral-500 text-center font-normal dark:text-neutral-300",
+        "text-neutral-200 text-center font-normal dark:text-neutral-300",
         "text-left max-w-sm mx-0 md:text-sm my-2"
       )}>
       {children}
@@ -113,7 +113,7 @@ export const SkeletonOne = () => {
   return (
     <div className="relative flex py-8 px-2 gap-10 h-full">
       <div
-        className="w-full  p-5  mx-auto bg-white dark:bg-neutral-900 shadow-2xl group h-full">
+        className="w-full  p-5  mx-auto shadow-2xl group h-full">
         <div className="flex flex-1 w-full h-full flex-col space-y-2  ">
           {/* TODO */}
           <Image

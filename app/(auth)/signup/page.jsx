@@ -1,10 +1,10 @@
-import { AuthStep } from '@/components/AuthStep'
+import { SignUp } from '@/components/SignUp'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      <AuthStep />
+    <div className='signup'>
+        <SignUp />
     </div>
   )
 }

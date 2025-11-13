@@ -1,8 +1,13 @@
+"use client"
 import { CardSpotlight } from "@/components/ui/card-spotlight";
+import Image from "next/image";
 
 export function AuthStep() {
   return (
-    <CardSpotlight className="h-96 w-96">
+    <CardSpotlight className="h-full w-full flex flex-col">
+      <div className="sign_logo">
+        <Image src={'/logo.png'} height={300} width={300} alt="Logo" className="" />
+      </div>
       <p className="text-xl font-bold relative z-20 mt-2 text-white">
         Authentication steps
       </p>
@@ -16,8 +21,7 @@ export function AuthStep() {
         </ul>
       </div>
       <p className="text-neutral-300 mt-4 relative z-20 text-sm">
-        Ensuring your account is properly secured helps protect your personal
-        information and data.
+        We eliminate the stigma and uncertainty by offering a carefully curated selection of high-quality products, a secure and private shopping experience, and a commitment to education, all designed to deliver peace of mind and personal discovery.
       </p>
     </CardSpotlight>
   );
