@@ -6,7 +6,7 @@ export function World() {
   return (
     <div className=" py-40  w-full">
       <div className="max-w-7xl mx-auto text-center">
-        <p className="font-bold text-xl md:text-4xl dark:text-white text-black">
+        <p className="font-bold text-xl md:text-4xl">
           Remote{" "}
           <span className="text-neutral-400">
             {"Connectivity".split("").map((word, idx) => (

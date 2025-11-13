@@ -118,7 +118,7 @@ export function Nav() {
 
       {/* Mobile Navigation */}
       <div className="md:hidden">
-        <nav className="nav bg-pink-50">
+        <nav className="nav">
           <div className="flex justify-between items-center w-full">
             <Image src={'/logo.png'} height={60} width={60} alt="logo" />
             

@@ -16,9 +16,9 @@ export default function WorldMap({
 
   const svgMap = map.getSVG({
     radius: 0.22,
-    color: theme === "dark" ? "#FFFFFF40" : "#00000040",
+    color: theme === "dark" ? "#FFFFFF40" : "#FFFFFF40",
     shape: "circle",
-    backgroundColor: theme === "red",
+    backgroundColor: theme === "dark" ? "#010012" : "#010012",
   });
 
   const projectPoint = (lat, lng) => {

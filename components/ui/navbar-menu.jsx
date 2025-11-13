@@ -75,7 +75,7 @@ export const Menu = ({
     <nav
       // resets the state
       onMouseLeave={() => setActive(null)}
-      className="nav bg-pink-50">
+      className="nav">
       {children}
     </nav>
   );
